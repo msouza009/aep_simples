@@ -9,6 +9,6 @@
   "dependencies": {
     "bcrypt": "^5.0.1",
     "express": "^4.17.1",
-    "sqlite3": "^5.1.7"
+    "mysql2": "^3.11.3"
   }
 }

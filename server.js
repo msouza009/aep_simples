@@ -1,33 +1,40 @@
 const express = require('express');
+const connection = require('./config/db');
 const app = express();
-const path = require('path');
-const bodyParser = require('body-parser');
 
-// Configurações
-app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json()); // Middleware para parsear JSON
 
-// Rotas
-app.post('/api/cadastrar', (req, res) => {
+// Rota para inserir um novo usuário
+app.post('/usuarios', (req, res) => {
     const { nome, email, senha } = req.body;
-    // Lógica para cadastrar usuário no banco de dados
-    res.json({ message: 'Usuário cadastrado com sucesso!' });
+
+    if (!nome || !email || !senha) {
+        return res.status(400).send('Nome, email e senha são obrigatórios.');
+    }
+
+    const query = 'INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)';
+    connection.query(query, [nome, email, senha], (err, results) => {
+        if (err) {
+            console.error('Erro ao inserir usuário:', err); // Log do erro
+            return res.status(500).send(`Erro ao inserir usuário: ${err.message}`); // Resposta com erro
+        }
+        res.status(201).send(`Usuário inserido com ID: ${results.insertId}`); // Resposta de sucesso
+    });
 });
 
-app.post('/api/gerar-senha', (req, res) => {
-    const { usuarioId, descricao } = req.body;
-    // Lógica para gerar senha e armazenar no banco de dados
-    res.json({ message: 'Senha gerada com sucesso!' });
+// Rota para recuperar todos os usuários
+app.get('/usuarios', (req, res) => {
+    connection.query('SELECT * FROM usuarios', (err, results) => {
+        if (err) {
+            console.error('Erro ao recuperar usuários:', err);
+            return res.status(500).send('Erro ao recuperar usuários'); // Resposta com erro
+        }
+        res.status(200).json(results); // Resposta com os usuários
+    });
 });
 
-app.get('/api/historico-logins', (req, res) => {
-    // Lógica para obter o histórico de logins do banco de dados
-    const historico = []; // Substitua isso pela lógica real
-    res.json(historico);
-});
-
-// Iniciar o servidor
-const PORT = 3000;
+// Inicia o servidor na porta 3000
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
