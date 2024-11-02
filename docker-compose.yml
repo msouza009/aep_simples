@@ -1,0 +1,30 @@
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: aepcesumar
+      MYSQL_USER: aep
+      MYSQL_PASSWORD: aep123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile # Certifique-se de ter um Dockerfile para seu aplicativo
+    ports:
+      - "3000:3000" # Mude a porta conforme sua necessidade
+    depends_on:
+      - mysql
+    environment:
+      DB_HOST: mysql
+      DB_USER: aep
+      DB_PASSWORD: aep123
+      DB_NAME: aepcesumar
+
+volumes:
+  mysql_data:
