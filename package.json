@@ -1,0 +1,14 @@
+{
+  "name": "sistema-simples",
+  "version": "1.0.0",
+  "description": "Projeto simples para gerenciamento de usuários e senhas usando Node.js, Express e SQLite",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "express": "^4.17.1",
+    "sqlite3": "^5.1.7"
+  }
+}
