@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const bodyParser = require('body-parser');
-const db = require('./db'); // Importar a conexão com o banco de dados
+const db = require('./config/db');
 
 // Configurações
 app.use(bodyParser.json());

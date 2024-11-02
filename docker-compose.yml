@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   mysql:
     image: mysql:latest
@@ -11,13 +13,14 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./mysql-init/init.sql:/docker-entrypoint-initdb.d/init.sql  # Atualize o caminho aqui
 
   app:
     build:
       context: .
-      dockerfile: Dockerfile # Certifique-se de ter um Dockerfile para seu aplicativo
+      dockerfile: Dockerfile
     ports:
-      - "3000:3000" # Mude a porta conforme sua necessidade
+      - "3000:3000"
     depends_on:
       - mysql
     environment:
